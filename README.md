@@ -7,7 +7,7 @@ It consists of parts such as :
    ii)Proj2( OpenCV ) ---->>>> Doc Scanner
    iii)Proj3( OpenCV ) ---->>>> LicensePlate Scanner 
 4.My NumPy pratice file  
-6. Triage ---> This project implements triage system using computer vision it is about detecting rescue camps and casualties from a map image assigning priorities based on severity and computing a rescue ratio to evaluate effectiveness
+5. Triage ---> This project implements triage system using computer vision it is about detecting rescue camps and casualties from a map image assigning priorities based on severity and computing a rescue ratio to evaluate effectiveness
      The main workflow I decide was :
    
    1)Camp Detection
