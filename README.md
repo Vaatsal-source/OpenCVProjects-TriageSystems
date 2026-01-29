@@ -3,9 +3,11 @@ My- Main File
 It consists of parts such as : 
 1. My pratice Jupyter Nb of Py3 ( I wrote all the codes by my hand after understanding each line just to make sure I properly understand the working of the whole program and each keyword )
 2. My pratice Jupyter Nb of Open CV ( again I wrote all the codes myself )
-3. Proj1( OpenCV ) ---->>>> Air Sketch ( First I wrote the code while taking help from the youtube tutorial and then later after encountering bugs fixed up them by taing help from docs and other sources )
+3. i)Proj1( OpenCV ) ---->>>> Air Sketch ( First I wrote the code while taking help from the youtube tutorial and then later after encountering bugs fixed up them by taing help from docs and other sources )
+   ii)Proj2( OpenCV ) ---->>>> Doc Scanner
+   iii)Proj3( OpenCV ) ---->>>> LicensePlate Scanner 
 4.My NumPy pratice file  
-5. Triage ---> This project implements triage system using computer vision it is about detecting rescue camps and casualties from a map image assigning priorities based on severity and computing a rescue ratio to evaluate effectiveness
+6. Triage ---> This project implements triage system using computer vision it is about detecting rescue camps and casualties from a map image assigning priorities based on severity and computing a rescue ratio to evaluate effectiveness
      The main workflow I decide was :
    
    1)Camp Detection
