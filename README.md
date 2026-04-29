@@ -1,83 +1,113 @@
+🚨 Vision-Based Disaster Triage System
 
-My- Main File 
-It consists of parts such as : 
-1. My pratice Jupyter Nb of Py3 ( I wrote all the codes by my hand after understanding each line just to make sure I properly understand the working of the whole program and each keyword )
-2. My pratice Jupyter Nb of Open CV ( again I wrote all the codes myself )
-3. i)Proj1( OpenCV ) ---->>>> Air Sketch ( First I wrote the code while taking help from the youtube tutorial and then later after encountering bugs fixed up them by taing help from docs and other sources )
-   ii)Proj2( OpenCV ) ---->>>> Doc Scanner
-   iii)Proj3( OpenCV ) ---->>>> LicensePlate Scanner 
-4.My NumPy pratice file  
-5. Triage ---> This project implements triage system using computer vision it is about detecting rescue camps and casualties from a map image assigning priorities based on severity and computing a rescue ratio to evaluate effectiveness
-     The main workflow I decide was :
-   
-   1)Camp Detection
-   i)Camps are detected using HSV color segmentation.
-   ii)Only the largest contour per camp color is retained to avoid background misclassification (e.g., ocean regions).
-   iii)Each camp is assigned a predefined capacity.
+An end-to-end computer vision + algorithmic decision system that detects casualties from an aerial image, assigns priorities, and optimally allocates them to rescue camps under real-world constraints.
 
-   2)Casualty Detection
-   i)The image is binarized using adaptive thresholding to preserve low-contrast symbols.
-   ii)Connected component analysis is used to detect casualty symbol fragments.
-   iii)To prevent overcounting, spatially close components are merged using distance-based clustering.
-   iv)Each cluster represents one casualty.
+📌 Overview
 
-   3)Priority Assignment
-   i)Casualty priority is assigned heuristically based on cluster size.
-   ii)Larger clusters indicate higher severity.
+This project simulates a disaster response scenario where:
 
-   4)Triage Assignment
-   i)Casualties are sorted by priority.
-   ii)Each casualty is assigned to the nearest camp with available capacity.​
+Rescue camps have limited capacity
+Casualties have varying severity levels
+The goal is to maximize rescue effectiveness
 
-   I had to work out the codes many times :
-   
-   i)lower_blue = [90, 50, 50]
-     upper_blue = [140, 255, 255]
-     ocean_mask = cv2.inRange(hsv, lower_blue, upper_blue)
+The system processes an image and outputs an optimized rescue plan.
 
-   At first I naively used HSV blue range to detect blue camps This resulted in both camps and ocean being detected in blue it later resulted in Multiple blue camps ,Incorrect camp locations
-   I fixed it by :
-   Selecting the largest contour per color
-   Rejecting irrelevant blue regions
-   Treating camps as symbols, not background
-   
-   ii)edges = cv2.Canny(gray, 80, 160)
-      contours = cv2.findContours(edges)
+⚙️ Pipeline
+1. Scene Understanding (Computer Vision)
+Convert image from BGR → HSV
+Perform color segmentation to detect:
+🟦 Blue, 🟪 Pink, ⬜ Grey → Rescue Camps
+🟡/🟢/🔺 shapes → Casualties
+Apply:
+Thresholding (cv2.threshold, adaptiveThreshold)
+Morphological operations (noise removal)
+2. Object Detection
+Detect objects using:
+cv2.findContours()
+cv2.connectedComponentsWithStats()
+Extract centroids using image moments
+3. Casualty Analysis
+Classify based on:
+Shape (triangle, square, star)
+Size / cluster density
+Assign priority scores:
+Higher score = higher urgency
+4. Camp Detection
+Use HSV masks to isolate camps
+Extract largest contour per camp
+Assign predefined capacities:
+Blue → 4
+Pink → 3
+Grey → 2
+5. Optimization (Triage Algorithm)
 
-   secondly I detected casualties via edges + contours but this had a problem , One casualty symbol = many edge contours this further resulted in 
-   Same casualty being detected 5–8 times
-   Inflated casualty count's around (30–40)
-   Rescue Ratio being collapsed
-   This was because Edges detect boundaries not objects
-   I fixed this by :
-   Switching to connected component analysis
-   Treating casualties as filled blobs
-   
-   iii)threshold(gray, 200)
-       morphologyEx(..., iterations=2)
-       area filter [80–800]
+Two strategies implemented:
 
-   Then I tried to aggressively remove noise However his too had a lot of problems casualty symbols are light gray , Threshold was too high which resulted in symbols erased , Morphology was too aggressive which      resulted in blobs destroyed
-   I later fixed this by :
-   Implementing Adaptive thresholding
-   relaxing morphology
-   Relaxing area limits
-   iv) Finally I was able to make correct camp detections but wrong counting of casualties
-   because I thought Connected components correctly detected symbol fragments
-   however Connected components are not equal to semantic objects
-   I finally fixed it by :
-   Spatial clustering:
-   Group components within a radius
-   One cluster is equal to one casualty
-   Cluster size = priority
-   This was the key conceptual leap
+✅ Greedy Scoring Approach
+Score = priority - distance
+Assign best (casualty, camp) pairs first
+✅ Priority-First Assignment
+Sort casualties by priority
+Assign to nearest available camp
+Respect:
+Capacity constraints
+One-time assignment
+6. Evaluation Metric
 
-   In the end the main challenge was The main challenge was preventing overcounting caused by symbol fragmentation This was solved by clustering connected components spatially which aligns detections with            semantic objects rather than raw pixels
-   After fixing all of these issues my code in the final notebook was running fine and was finally displaying optimal results as:
-   Each detection stage is semantically aligned:
-   Colors = camps
-   Blobs = casualties
-   Clusters = people
-   Noise is handled statistically not aggressively
+Rescue Ratio (Pr):
 
-   
+Pr=
+Total casualties
+Total priority rescued
+	​
+
+Measures effectiveness of rescue allocation
+Higher = better triage decision
+🧠 Key Concepts Used
+Computer Vision (OpenCV)
+Image Segmentation (HSV masking)
+Contour & Blob Detection
+Spatial Reasoning (Euclidean Distance)
+Greedy Algorithms
+Heuristic Optimization
+📊 Example Output
+Detected camps: [{'blue', 'pink', 'grey'}]
+Detected casualties: 13
+
+Camp priority scores:
+blue: 10
+pink: 6
+grey: 6
+
+Rescue Ratio (Pr): 1.69
+🚀 How to Run
+1. Install dependencies
+pip install opencv-python numpy
+2. Run the script
+python triage.py
+3. Input
+Place your image inside:
+/task_images/1.png
+📁 Project Structure
+├── task_images/
+│   └── 1.png
+├── triage.py
+└── README.md
+🔥 Highlights
+Combines vision + decision-making
+Handles real-world constraints
+Simulates autonomous rescue planning
+Modular pipeline (easy to extend)
+🧩 Future Improvements
+Replace heuristics with ML/DL models
+Use Hungarian Algorithm / Linear Programming
+Real-time processing (video input)
+Integration with drone navigation systems
+GPU acceleration
+💡 Project Motivation
+
+This project explores how visual perception + algorithmic reasoning can be combined to build systems capable of making critical real-world decisions, such as disaster response and resource allocation.
+
+📬 Author
+
+Vaatsalya Srivastava
